@@ -7,7 +7,7 @@
 //  DB — IndexedDB wrapper
 // ════════════════════════════════════════════════════
 const DB = (() => {
-  const NAME='freelow', VER=3;
+  const NAME='freelow', VER=4;
   let db=null;
 
   function open(){
