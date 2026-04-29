@@ -10,31 +10,47 @@ const DB = (() => {
   const NAME='freelow', VER=4;
   let db=null;
 
-  function open(){
-    if(db) return Promise.resolve(db);
+  const STORES=[
+    ['clientes','id',['nombre']],
+    ['proyectos','id',['clienteId','estado','fechaEntregaCliente']],
+    ['tareas','id',['proyectoId','colaboradorId']],
+    ['colaboradores','id',['nombre']],
+    ['alertas','id',['proyectoId','enviada']],
+    ['config','clave',[]],
+    ['pagos','id',['proyectoId','clienteId','estado']],
+    ['comunicaciones','id',['proyectoId','clienteId']],
+  ];
+
+  function createMissingStores(d){
+    STORES.forEach(([name,kp,idxs])=>{
+      if(d.objectStoreNames.contains(name)) return;
+      const s=d.createObjectStore(name,{keyPath:kp});
+      idxs.forEach(i=>s.createIndex(i,i,{unique:false}));
+    });
+  }
+
+  function openWithVer(ver){
     return new Promise((res,rej)=>{
-      const req=indexedDB.open(NAME,VER);
-      req.onupgradeneeded=e=>{
-        const d=e.target.result;
-        const defs=[
-          ['clientes','id',['nombre']],
-          ['proyectos','id',['clienteId','estado','fechaEntregaCliente']],
-          ['tareas','id',['proyectoId','colaboradorId']],
-          ['colaboradores','id',['nombre']],
-          ['alertas','id',['proyectoId','enviada']],
-          ['config','clave',[]],
-          ['pagos','id',['proyectoId','clienteId','estado']],
-          ['comunicaciones','id',['proyectoId','clienteId']],
-        ];
-        defs.forEach(([name,kp,idxs])=>{
-          if(d.objectStoreNames.contains(name)) return;
-          const s=d.createObjectStore(name,{keyPath:kp});
-          idxs.forEach(i=>s.createIndex(i,i,{unique:false}));
-        });
+      const req=indexedDB.open(NAME,ver);
+      req.onupgradeneeded=e=>createMissingStores(e.target.result);
+      req.onsuccess=e=>{
+        db=e.target.result;
+        // Verificar que todos los stores existen; si falta alguno, reabrir con ver+1
+        const missing=STORES.some(([name])=>!db.objectStoreNames.contains(name));
+        if(missing){
+          db.close();db=null;
+          openWithVer(ver+1).then(res).catch(rej);
+        } else {
+          res(db);
+        }
       };
-      req.onsuccess=e=>{db=e.target.result;res(db)};
       req.onerror=e=>rej(e.target.error);
     });
+  }
+
+  function open(){
+    if(db) return Promise.resolve(db);
+    return openWithVer(VER);
   }
 
   const wrap=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});

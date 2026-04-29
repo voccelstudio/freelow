@@ -374,3 +374,21 @@ body[data-theme="glass"]{background:linear-gradient(135deg,#1A2A4A 0%,#0A1A3A 50
 .ob-th-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s,border-color .15s}
 .ob-th-dot:hover{transform:scale(1.15)}
 .ob-th-dot.on{border-color:var(--tx)}
+
+/* ── COLORES DOTS ONBOARDING (espejo de th-dot) ── */
+.ob-th-dot[data-t="minimal"]    {background:#F7F6F3;box-shadow:inset 0 0 0 1px #ccc}
+.ob-th-dot[data-t="darkpro"]    {background:#161920}
+.ob-th-dot[data-t="colorful"]   {background:linear-gradient(135deg,#7C6FF5,#C9BBFF)}
+.ob-th-dot[data-t="warm"]       {background:#C25A1A}
+.ob-th-dot[data-t="noir"]       {background:#1A1A1A;box-shadow:inset 0 0 0 1px #444}
+.ob-th-dot[data-t="blueprint"]  {background:#0A5FD6}
+.ob-th-dot[data-t="y2k"]        {background:linear-gradient(135deg,#4090E0,#80B8F0)}
+.ob-th-dot[data-t="cottagecore"]{background:#5C7A3E}
+.ob-th-dot[data-t="vaporwave"]  {background:linear-gradient(135deg,#FF40A0,#8040FF)}
+.ob-th-dot[data-t="brutalist"]  {background:#FF2200;box-shadow:2px 2px 0 #1A1A1A}
+.ob-th-dot[data-t="terminal"]   {background:#030D03;box-shadow:0 0 6px rgba(0,255,85,.5)}
+.ob-th-dot[data-t="risograph"]  {background:linear-gradient(135deg,#E83A00,#FFD060)}
+.ob-th-dot[data-t="glass"]      {background:linear-gradient(135deg,rgba(96,176,255,.7),rgba(96,96,255,.5));box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+.ob-th-dot[data-t="solarized"]  {background:#FDF6E3;box-shadow:inset 0 0 0 1px #C5BBAA}
+.ob-th-dot[data-t="harajuku"]   {background:linear-gradient(135deg,#FF1493,#FF80CC)}
+.ob-th-dot[data-t="mushroom"]   {background:#7A6A50}
