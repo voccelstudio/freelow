@@ -1195,7 +1195,7 @@ function obStep0(){
     </select></div>
     <div class="fg"><label class="fl">Tema visual</label>
       <div class="ob-theme-grid" id="ob-th-grid">
-        ${OB_TEMAS.map(t=>`<div class="ob-th-dot" data-t="${t}" title="${t}" onclick="obSetTheme('${t}')" style="width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s,border-color .15s" class="${t===ob.tema?'on':''}"></div>`).join('')}
+        ${OB_TEMAS.map(t=>`<div class="ob-th-dot${t===ob.tema?' on':''}" data-t="${t}" title="${t}" onclick="obSetTheme('${t}')"></div>`).join('')}
       </div>
     </div>
     <div class="ob-btn-row" style="margin-top:20px">
@@ -1259,13 +1259,18 @@ function obStep3(){
 }
 
 async function obGo1(){
-  const nombre=document.getElementById('ob-nombre').value.trim();
-  if(!nombre){obShake();toast('Escribí tu nombre primero','er');return}
-  ob.data.nombre=nombre;
-  ob.data.moneda=document.getElementById('ob-moneda').value;
-  await DB.setCfg('nombreUsuario',nombre);
-  await DB.setCfg('moneda',ob.data.moneda);
-  ob.step=1;obRender();
+  try{
+    const el=document.getElementById("ob-nombre");
+    const nombre=(el?el.value:ob.data.nombre||"").trim();
+    if(!nombre){obShake();toast("Escribí tu nombre primero","er");return}
+    const monSel=document.getElementById("ob-moneda");
+    const moneda=monSel?monSel.value:(ob.data.moneda||"PYG");
+    ob.data.nombre=nombre;
+    ob.data.moneda=moneda;
+    await DB.setCfg("nombreUsuario",nombre);
+    await DB.setCfg("moneda",moneda);
+    ob.step=1;obRender();
+  }catch(e){toast("Error: "+e.message,"er");console.error(e);}
 }
 
 async function obSaveProyecto(){
